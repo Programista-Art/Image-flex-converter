@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Image Flex Converter Demo by Programista Art'
+  Caption = 'Image Flex Converter 1.0.0 by Programista Art'
   ClientHeight = 351
   ClientWidth = 478
   Color = clBtnFace
@@ -62,28 +62,19 @@ object Form1: TForm1
         ShowHint = True
         OnClick = ToolButton3Click
       end
-      object Button2: TButton
-        Left = 46
-        Top = 0
-        Width = 75
-        Height = 23
-        Caption = 'test'
-        TabOrder = 0
-        OnClick = Button2Click
-      end
       object EdtWidth: TEdit
-        Left = 121
+        Left = 46
         Top = 0
         Width = 42
         Height = 23
         Hint = 'Szeroko'#347#263
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 1
+        TabOrder = 0
       end
       object Label2: TLabel
         AlignWithMargins = True
-        Left = 163
+        Left = 88
         Top = 0
         Width = 13
         Height = 23
@@ -95,20 +86,20 @@ object Form1: TForm1
         Caption = 'px'
       end
       object EdtHeight: TEdit
-        Left = 176
+        Left = 101
         Top = 0
         Width = 42
         Height = 23
         Hint = 'Wysoko'#347#263
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 2
+        TabOrder = 1
       end
       object Label3: TLabel
         AlignWithMargins = True
-        Left = 218
+        Left = 143
         Top = 0
-        Width = 13
+        Width = 18
         Height = 23
         Margins.Left = 5
         Margins.Top = 10
@@ -118,12 +109,14 @@ object Form1: TForm1
         Caption = 'px'
       end
       object Button3: TButton
-        Left = 231
+        Left = 161
         Top = 0
         Width = 75
         Height = 23
         Caption = 'Convertacja'
-        TabOrder = 3
+        Enabled = False
+        TabOrder = 2
+        Visible = False
         OnClick = Button3Click
       end
     end
@@ -494,6 +487,23 @@ object Form1: TForm1
   object MainMenu: TMainMenu
     Left = 184
     Top = 152
+    object Plik1: TMenuItem
+      Caption = 'Plik'
+      object OpenImage: TMenuItem
+        Caption = 'Otw'#243'rz zdj'#281'cie'
+        OnClick = OpenImageClick
+      end
+      object Close: TMenuItem
+        Caption = 'Zamknij'
+      end
+    end
+    object Edycja1: TMenuItem
+      Caption = 'Edycja'
+      object Zmniejszrozmiarzdjcia1: TMenuItem
+        Caption = 'Zmie'#324' rozmiar zdj'#281'cia'
+        OnClick = Zmniejszrozmiarzdjcia1Click
+      end
+    end
     object Informacja1: TMenuItem
       Caption = 'Informacja'
       OnClick = Informacja1Click

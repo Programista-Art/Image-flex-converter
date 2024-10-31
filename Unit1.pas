@@ -25,7 +25,6 @@ type
     LabeZ: TLabel;
     MainMenu: TMainMenu;
     Informacja1: TMenuItem;
-    Button2: TButton;
     SPD: TSavePictureDialog;
     EdtWidth: TEdit;
     EdtHeight: TEdit;
@@ -33,13 +32,19 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Button3: TButton;
+    Edycja1: TMenuItem;
+    Plik1: TMenuItem;
+    Close: TMenuItem;
+    Zmniejszrozmiarzdjcia1: TMenuItem;
+    OpenImage: TMenuItem;
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure Informacja1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Zmniejszrozmiarzdjcia1Click(Sender: TObject);
+    procedure OpenImageClick(Sender: TObject);
   private
   //Konwersja BMP w JPG
   procedure ConvertBmpToJPG(Image: TImage; FilePath: string);
@@ -61,8 +66,10 @@ type
   procedure ConvertJpegToPNG(Image: TImage; FilePath: string);
   //Testowa
   procedure ConvertJpgToWebpTets;
+  //Zmień rozmiar zdjęcia
+  procedure ResizeImg;
   function GetResizedImage(const AImage: ISkImage; const ANewWidth, ANewHeight: Integer): ISkImage;
-
+  procedure OpenImg;
   procedure ChooseExtension;
     { Private declarations }
   public
@@ -96,24 +103,6 @@ if ComboConvert.ItemIndex = -1 then
 //    ChooseExtension;
 end;
 
-
-procedure TForm1.Button2Click(Sender: TObject);
-var
-  LImage: ISkImage;
-  NewFileName: string;
-begin
-    WidthImg := StrToInt(EdtWidth.Text);
-    HeightImg := StrToInt(EdtHeight.Text);
-
-    LImage := TSkImage.MakeFromEncodedFile(OPD.FileName);
-    // Skalowanie obrazu do rozmiaru WidthImg x HeightImg
-    LImage := GetResizedImage(LImage, WidthImg, HeightImg);
-    // LImage.EncodeToFile(OPD.FileName + 'zmn'+'.jpg');
-    // Konstruowanie nowej nazwy pliku z rozmiarem
-    NewFileName := ChangeFileExt(OPD.FileName,Format('_%dx%d.jpg', [WidthImg, HeightImg]));
-    // Zapisywanie przeskalowanego obrazu do nowego pliku z rozmiarem w nazwie
-    LImage.EncodeToFile(NewFileName);
-end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin
@@ -424,11 +413,20 @@ begin
   Form2.ShowModal;
 end;
 
-procedure TForm1.ToolButton1Click(Sender: TObject);
+
+
+
+
+procedure TForm1.OpenImageClick(Sender: TObject);
+begin
+  OpenImg;
+end;
+
+procedure TForm1.OpenImg;
 var
 ImageWidth, ImageHeight: Integer;
 begin
-  if OPD.Execute then
+ if OPD.Execute then
   begin
     Image1.Picture.LoadFromFile(OPD.FileName);
     ExtensImage := ExtractFileExt(OPD.FileName);
@@ -444,6 +442,28 @@ begin
   end;
 end;
 
+procedure TForm1.ResizeImg;
+var
+  LImage: ISkImage;
+  NewFileName: string;
+begin
+  WidthImg := StrToInt(EdtWidth.Text);
+  HeightImg := StrToInt(EdtHeight.Text);
+
+  LImage := TSkImage.MakeFromEncodedFile(OPD.FileName);
+  // Skalowanie obrazu do rozmiaru WidthImg x HeightImg
+  LImage := GetResizedImage(LImage, WidthImg, HeightImg);
+  // LImage.EncodeToFile(OPD.FileName + 'zmn'+'.jpg');
+  // Konstruowanie nowej nazwy pliku z rozmiarem
+  NewFileName := ChangeFileExt(OPD.FileName,Format('_%dx%d.jpg', [WidthImg, HeightImg]));
+  // Zapisywanie przeskalowanego obrazu do nowego pliku z rozmiarem w nazwie
+  LImage.EncodeToFile(NewFileName);
+end;
+
+procedure TForm1.ToolButton1Click(Sender: TObject);
+begin
+  OpenImg;
+end;
 
 procedure TForm1.ToolButton3Click(Sender: TObject);
 begin
@@ -452,6 +472,11 @@ begin
   LabeInfoImage.Caption := 'Info';
   EdtWidth.Text := '';
   EdtHeight.Text := '';
+end;
+
+procedure TForm1.Zmniejszrozmiarzdjcia1Click(Sender: TObject);
+begin
+  ResizeImg;
 end;
 
 end.
