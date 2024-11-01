@@ -13,6 +13,7 @@ object Form2: TForm2
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poMainFormCenter
+  OnCreate = FormCreate
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
@@ -48,7 +49,7 @@ object Form2: TForm2
         Left = 0
         Top = 0
         Width = 302
-        Height = 161
+        Height = 145
         Align = alTop
         Alignment = taCenter
         Font.Charset = EASTEUROPE_CHARSET
@@ -71,13 +72,29 @@ object Form2: TForm2
       end
       object Panel2: TPanel
         Left = 0
-        Top = 161
+        Top = 145
         Width = 302
-        Height = 29
+        Height = 45
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 145
-        ExplicitHeight = 41
+        ExplicitTop = 144
+        object SkSvg1: TSkSvg
+          AlignWithMargins = True
+          Left = 6
+          Top = -1
+          Width = 290
+          Height = 40
+          Cursor = crHandPoint
+          Margins.Left = 5
+          Margins.Top = 5
+          Margins.Right = 5
+          Margins.Bottom = 5
+          Align = alBottom
+          OnClick = SkSvg1Click
+          ExplicitLeft = 4
+          ExplicitTop = 4
+          ExplicitWidth = 37
+        end
       end
     end
     object TabSheet2: TTabSheet
