@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Image Flex Converter 1.0.0 by Programista Art'
   ClientHeight = 413
-  ClientWidth = 715
+  ClientWidth = 685
   Color = clBtnFace
   Constraints.MinHeight = 300
   Constraints.MinWidth = 300
@@ -14,19 +14,19 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu
   Position = poMainFormCenter
+  OnCreate = FormCreate
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 715
+    Width = 685
     Height = 376
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 369
     object Image1: TImage
       Left = 1
       Top = 61
-      Width = 582
+      Width = 552
       Height = 314
       Align = alClient
       DragMode = dmAutomatic
@@ -37,13 +37,12 @@ object Form1: TForm1
     object ToolBar1: TToolBar
       Left = 1
       Top = 1
-      Width = 713
+      Width = 683
       Height = 25
       ButtonHeight = 23
       Caption = 'ToolBar1'
       Images = ImageList1
       TabOrder = 0
-      ExplicitWidth = 476
       object ToolButton1: TToolButton
         Left = 0
         Top = 0
@@ -110,27 +109,19 @@ object Form1: TForm1
         Align = alLeft
         Caption = 'px'
       end
-      object Button3: TButton
-        Left = 156
-        Top = 0
-        Width = 75
-        Height = 23
-        Caption = 'Convertacja'
-        TabOrder = 2
-      end
       object EdtPathImgLoad: TEdit
-        Left = 231
+        Left = 156
         Top = 0
         Width = 114
         Height = 23
         Align = alLeft
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 3
+        TabOrder = 2
         TextHint = #347'cie'#380'ka do zdj'#281'cia'
       end
       object SbutLoadImg: TSpeedButton
-        Left = 345
+        Left = 270
         Top = 0
         Width = 23
         Height = 23
@@ -139,25 +130,37 @@ object Form1: TForm1
         Images = ImageList1
         OnClick = SbutLoadImgClick
       end
-      object EditEXT: TEdit
-        Left = 368
+      object EditNameImg: TEdit
+        Left = 293
         Top = 0
-        Width = 121
+        Width = 132
         Height = 23
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+        TextHint = 'Nazwa pliku'
+      end
+      object EditSaveFolderImg: TEdit
+        Left = 425
+        Top = 0
+        Width = 127
+        Height = 23
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 4
+        TextHint = 'Zapisz w folderze'
       end
     end
     object Panel2: TPanel
       Left = 1
       Top = 26
-      Width = 713
+      Width = 683
       Height = 35
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 476
       object Label1: TLabel
         AlignWithMargins = True
-        Left = 23
+        Left = 70
         Top = 11
         Width = 11
         Height = 18
@@ -173,31 +176,19 @@ object Form1: TForm1
         AlignWithMargins = True
         Left = 6
         Top = 11
-        Width = 7
+        Width = 54
         Height = 18
         Margins.Left = 5
         Margins.Top = 10
         Margins.Right = 5
         Margins.Bottom = 5
         Align = alLeft
-        Caption = 'Z'
-        ExplicitHeight = 15
-      end
-      object LabeInfoImage: TLabel
-        AlignWithMargins = True
-        Left = 225
-        Top = 11
-        Width = 21
-        Height = 20
-        Margins.Top = 10
-        Margins.Right = 0
-        Align = alLeft
-        Caption = 'Info'
+        Caption = 'Konwertuj'
         ExplicitHeight = 15
       end
       object ComboConvert: TComboBox
         AlignWithMargins = True
-        Left = 42
+        Left = 89
         Top = 6
         Width = 95
         Height = 23
@@ -210,7 +201,7 @@ object Form1: TForm1
       end
       object Button1: TButton
         AlignWithMargins = True
-        Left = 142
+        Left = 189
         Top = 4
         Width = 75
         Height = 27
@@ -223,7 +214,7 @@ object Form1: TForm1
       end
     end
     object FileListBox: TFileListBox
-      Left = 583
+      Left = 553
       Top = 61
       Width = 131
       Height = 314
@@ -231,20 +222,17 @@ object Form1: TForm1
       ItemHeight = 15
       TabOrder = 2
       OnClick = FileListBoxClick
-      ExplicitLeft = 346
-      ExplicitTop = 67
-      ExplicitHeight = 196
     end
   end
   object Panel3: TPanel
     Left = 0
     Top = 376
-    Width = 715
+    Width = 685
     Height = 37
     Align = alBottom
     TabOrder = 1
     object SpeedButton1: TSpeedButton
-      Left = 691
+      Left = 661
       Top = 1
       Width = 23
       Height = 16
@@ -258,7 +246,7 @@ object Form1: TForm1
     object StatusBar: TStatusBar
       Left = 1
       Top = 17
-      Width = 713
+      Width = 683
       Height = 19
       Panels = <
         item
@@ -269,9 +257,6 @@ object Form1: TForm1
           Text = 'Operacja'
           Width = 100
         end>
-      ExplicitLeft = 320
-      ExplicitTop = 8
-      ExplicitWidth = 0
     end
   end
   object ImageList1: TImageList
@@ -561,6 +546,10 @@ object Form1: TForm1
       object OpenImage: TMenuItem
         Caption = 'Otw'#243'rz zdj'#281'cie'
         OnClick = OpenImageClick
+      end
+      object SaveimgFolder: TMenuItem
+        Caption = 'Zapisz w folderze'
+        OnClick = SaveimgFolderClick
       end
       object Close: TMenuItem
         Caption = 'Zamknij'

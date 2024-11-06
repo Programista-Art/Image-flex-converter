@@ -29,10 +29,8 @@ type
     SPD: TSavePictureDialog;
     EdtWidth: TEdit;
     EdtHeight: TEdit;
-    LabeInfoImage: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    Button3: TButton;
     Edycja1: TMenuItem;
     Plik1: TMenuItem;
     Close: TMenuItem;
@@ -41,10 +39,12 @@ type
     EdtPathImgLoad: TEdit;
     SbutLoadImg: TSpeedButton;
     FileListBox: TFileListBox;
-    EditEXT: TEdit;
+    EditNameImg: TEdit;
     Panel3: TPanel;
     StatusBar: TStatusBar;
     SpeedButton1: TSpeedButton;
+    SaveimgFolder: TMenuItem;
+    EditSaveFolderImg: TEdit;
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -54,14 +54,20 @@ type
     procedure SbutLoadImgClick(Sender: TObject);
     procedure FileListBoxClick(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure SaveimgFolderClick(Sender: TObject);
 
 
 
   private
+  //Nazwa zdjęcia
+  procedure ChangeNameImg;
+  //Folder zapisu zdjęcia
+  procedure FolderSaveImg;
   //Konwersja Zdjęcia
   procedure ConvertBaseIMG(InputPath, OutputPath, NameImg, NameFormat: string; QualityIMG: Integer);
   //Konwersja BMP w JPG
-  procedure ConvertBmpToJPG(Image: TImage; FilePath: string);
+  procedure ConvertBmpToJPG(Image: TImage; FilePath: string; SavePath: string);
   //Konwersja ICO w BMP
   procedure ConvertIcoToBmp(Icon: TIcon; FilePath: string);
   //Konwersja JPG w PNG
@@ -98,7 +104,8 @@ type
 
 var
   Form1: TForm1;
-
+  NameImage: string;
+  PathSaveImg: string;
 implementation
 
 uses Unit2;
@@ -122,6 +129,15 @@ begin
 end;
 
 
+procedure TForm1.ChangeNameImg;
+begin
+  NameImage := EditNameImg.Text;
+  if NameImage = '' then
+  begin
+    NameImage := 'skonwertowane';
+  end
+end;
+
 procedure TForm1.ChooseExtension;
 begin
   //Konwertuj JPG w PNG
@@ -138,11 +154,11 @@ begin
 
    //Konwertuj WEBP w JPG
    if (ExtensImage = '.webp') and (ComboConvert.Text = 'JPG') then
-    ConvertWebpToJpg2(Image1, OPD.FileName);
+    ConvertWebpToJpg2(Image1, PathSaveImg);
 
   //Konwertuj BMP w JPG
   if (ExtensImage = '.bmp') and (ComboConvert.Text = 'JPG') then
-    ConvertBmpToJPG(Image1, OPD.FileName);
+    ConvertBmpToJPG(Image1,OPD.FileName, PathSaveImg);
 
   //Konwertuj ICO w BMP
   if (ExtensImage = '.ico') and (ComboConvert.Text = 'BMP') then
@@ -302,17 +318,23 @@ try
 end;
 
 //BMP w JPG
-procedure TForm1.ConvertBmpToJPG(Image: TImage; FilePath: string);
+procedure TForm1.ConvertBmpToJPG(Image: TImage; FilePath: string; SavePath: string);
 var
 MyJpeg: TJpegImage;
 begin
+  //Zapis w folderze
+  FolderSaveImg;
+  //Nazwa zdjęcia
+  ChangeNameImg;
   MyJpeg := TJpegImage.Create;
   try
     Image1.Picture.LoadFromFile(FilePath);
     MyJpeg .Assign(Image1.Picture.Bitmap);
     //Zapisz zdjęcie
-    MyJpeg .SaveToFile(ChangeFileExt(FilePath,'-przekonwertowane' + '.jpg'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+
+    MyJpeg .SaveToFile(ChangeFileExt(SavePath + '\',  NameImage + '.jpg'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     MyJpeg .Free;
   end;
@@ -323,6 +345,7 @@ procedure TForm1.ConvertIcoToBmp(Icon: TIcon; FilePath: string);
 var
 Bitmap: TBitmap;
 begin
+  ChangeNameImg;
   Bitmap:= TBitmap.Create;
   try
     Icon.LoadFromFile(FilePath);
@@ -330,8 +353,9 @@ begin
     Bitmap.Height := Icon.Height;
     Bitmap.Canvas.Draw(0,0,Icon);
     //Zapisz zdjęcie
-    Bitmap.SaveToFile(ChangeFileExt(FilePath,'-przekonwertowane' + '.bmp'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    Bitmap.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.bmp'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     Bitmap.Free;
   end;
@@ -344,6 +368,7 @@ var
   PngImage: TPngImage;
   Bitmap: TBitmap;
 begin
+  ChangeNameImg;
   JpegImage := TJPEGImage.Create;
   PngImage := TPngImage.Create;
   Bitmap := TBitmap.Create;
@@ -355,8 +380,9 @@ begin
     // Przekształcenie Bitmapy do PNG
     PngImage.Assign(Bitmap);
     // Zapisanie obrazu jako PNG
-    PngImage.SaveToFile(ChangeFileExt(FilePath, '-przekonwertowane' + '.png'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    PngImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.png'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     JpegImage.Free;
     PngImage.Free;
@@ -371,6 +397,7 @@ var
   PngImage: TPngImage;
   Bitmap: TBitmap;
 begin
+  ChangeNameImg;
   JpegImage := TJPEGImage.Create;
   PngImage := TPngImage.Create;
   Bitmap := TBitmap.Create;
@@ -382,8 +409,9 @@ begin
     // Przekształcenie Bitmapy do PNG
     PngImage.Assign(Bitmap);
     // Zapisanie obrazu jako PNG
-    PngImage.SaveToFile(ChangeFileExt(FilePath, '-przekonwertowane' + '.png'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    PngImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.png'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+      StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     JpegImage.Free;
     PngImage.Free;
@@ -397,6 +425,7 @@ Bitmap: TBitmap;
 JpegImage: TJPEGImage;
 SkImage: ISkImage;
 begin
+  ChangeNameImg;
   JpegImage := TJPEGImage.Create;
   Bitmap := TBitmap.Create;
   try
@@ -410,8 +439,9 @@ begin
     SkImage := Bitmap.ToSkImage;
 
     // Zapisanie obrazu jako WebP
-    SkImage.EncodeToFile(ChangeFileExt(FilePath,'-przekonwertowane' + '.webp'), TSkEncodedImageFormat.WEBP, 100);
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    SkImage.EncodeToFile(ChangeFileExt(FilePath,'-' + NameImage + '.webp'), TSkEncodedImageFormat.WEBP, 100);
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     JpegImage.Free;
     Bitmap.Free;
@@ -448,6 +478,7 @@ var
   PngImage: TPngImage;
   Bitmap: TBitmap;
 begin
+  ChangeNameImg;
   JpegImage := TJPEGImage.Create;
   PngImage := TPngImage.Create;
   Bitmap := TBitmap.Create;
@@ -459,8 +490,9 @@ begin
     // Przekształcenie Bitmapy do JPG
     JpegImage.Assign(Bitmap);
     // Zapisanie obrazu jako PNG
-    JpegImage.SaveToFile(ChangeFileExt(FilePath, '-przekonwertowane' + '.jpg'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    JpegImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.jpg'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     JpegImage.Free;
     PngImage.Free;
@@ -475,6 +507,7 @@ Bitmap: TBitmap;
 PngImage: TPNGImage;
 SkImage: ISkImage;
 begin
+  ChangeNameImg;
   PngImage := TPNGImage.Create;
   Bitmap := TBitmap.Create;
   try
@@ -488,9 +521,9 @@ begin
     SkImage := Bitmap.ToSkImage;
 
     // Zapisanie obrazu jako WebP
-    SkImage.EncodeToFile(ChangeFileExt(FilePath,'-skonwertowane' + '.webp'), TSkEncodedImageFormat.WEBP, 100);
+    SkImage.EncodeToFile(ChangeFileExt(FilePath,'-' + NameImage + '.webp'), TSkEncodedImageFormat.WEBP, 100);
     //MessageDlg('Zdjęcie skonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
-     StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ' + #13 + FilePath;
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     PngImage.Free;
     Bitmap.Free;
@@ -502,6 +535,7 @@ var
   Bitmap: TBitmap;
   JpegImage: TJPEGImage;
 begin
+  ChangeNameImg;
   JpegImage := TJPEGImage.Create;
   Image1.Picture.LoadFromFile(FilePath); // No error
   Bitmap := TBitmap.Create;
@@ -512,7 +546,7 @@ begin
     Bitmap.Canvas.Draw(0,0,Image1.Picture.Graphic);
     // Zapisanie obrazu jako JPG
     JpegImage.Assign(Bitmap);
-    JpegImage.SaveToFile(ChangeFileExt(FilePath,'-przekonwertowane' +  '.jpg'));
+    JpegImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.jpg'));
     //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
     StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
@@ -526,6 +560,7 @@ var
   Bitmap: TBitmap;
   PngImage: TPNGImage;
 begin
+  ChangeNameImg;
   PngImage := TPNGImage.Create;
   Image1.Picture.LoadFromFile(FilePath); // No error
   Bitmap := TBitmap.Create;
@@ -535,15 +570,14 @@ begin
     Bitmap.Canvas.Draw(0,0,Image1.Picture.Graphic);
     // Zapisanie obrazu jako PNG
     PngImage.Assign(Bitmap);
-    PngImage.SaveToFile(ChangeFileExt(FilePath,'-przekonwertowane' +  '.png'));
-    MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    PngImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage +  '.png'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
   finally
     Bitmap.Free;
     PngImage.Free;
   end;
 end;
-
-
 
 
 procedure TForm1.FileListBoxClick(Sender: TObject);
@@ -583,17 +617,24 @@ begin
   end
   else
     ShowMessage('Plik nie istnieje: ' + fileName);
-{
-  Image1.Picture.LoadFromFile(FileListBox.FileName);
-  ExtensImage := ExtractFileExt(FileListBox.FileName);
-  ImageWidth := Image1.Picture.Width;
-  ImageHeight := Image1.Picture.Height;
-  EdtWidth.Text := IntToStr(ImageWidth);
-  EdtHeight.Text := IntToStr(ImageHeight);
-  //Dodawanie rozszerzeń do ComboConvert
-  ChooseExtensionAddToComboConvert;
-  StatusBar.Panels[0].Text := 'Info: ' + Format('%s | Rozmiar: %d x %d px', [ExtensImage, ImageWidth, ImageHeight]);
-}
+end;
+
+procedure TForm1.FolderSaveImg;
+begin
+   PathSaveImg := EditSaveFolderImg.Text;
+   if PathSaveImg = '' then
+   begin
+   //ShowMessage('brak ścieżki');
+   PathSaveImg := Opd.FileName;
+   end;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  //Nazwa zdjęcia
+  //FolderSaveImg;
+  ChangeNameImg;
+  FileListBox.Directory := 'C:\Users\';
 end;
 
 //Zmienia rozmiar zdjęcia
@@ -666,6 +707,14 @@ begin
   LImage.EncodeToFile(NewFileName);
 end;
 
+procedure TForm1.SaveimgFolderClick(Sender: TObject);
+begin
+   if SelectDirectory('Wybierz katalog','',PathSaveImg) then
+    begin
+      EditSaveFolderImg.Text := PathSaveImg;
+    end;
+end;
+
 procedure TForm1.SbutLoadImgClick(Sender: TObject);
 begin
   FileListBox.Directory := EdtPathImgLoad.Text;
@@ -686,13 +735,12 @@ procedure TForm1.ToolButton3Click(Sender: TObject);
 begin
   Image1.Picture := nil;
   LabeZ.Caption := 'Z ';
-  LabeInfoImage.Caption := 'Info';
+  //LabeInfoImage.Caption := 'Info';
+  StatusBar.Panels[0].Text := Format('Info: %s | Rozmiar: %d x %d px', [ExtensImage, ImageWidth, ImageHeight]);
   EdtWidth.Text := '';
   EdtHeight.Text := '';
   ComboConvert.Clear;
 end;
-
-
 
 
 procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
