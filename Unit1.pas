@@ -46,6 +46,8 @@ type
     SaveimgFolder: TMenuItem;
     EditSaveFolderImg: TEdit;
     OpenFolder: TMenuItem;
+    Button2: TButton;
+    ComboExtension: TComboBox;
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -58,6 +60,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure SaveimgFolderClick(Sender: TObject);
     procedure OpenFolderClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
 
 
 
@@ -86,6 +89,12 @@ type
   procedure ConvertWebpToPng(Image: TImage; FilePath: string);
   //Konwersja Jpeg w PNG
   procedure ConvertJpegToPNG(Image: TImage; FilePath: string);
+  //Masowa konwertacja zdjeć
+  procedure ConvertJpgToPngAll(Image: TImage; FilePath: string);
+  //Masowa konwertacja oprócz webp
+  procedure ConvertImage(FilePath: string; OutputFormat: string);
+  //Masowa konwertacja JPG w WEBP / WEBP w JPG, PNG w WEBP / WEBP w PNG
+  procedure ConvertImageWebp(FilePath: string; OutputFormat: string);
   //Testowa
   procedure ConvertJpgToWebpTets;
   //Zmień rozmiar zdjęcia
@@ -131,6 +140,24 @@ begin
     ChooseExtension;
 end;
 
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+i:Integer;
+begin
+for i := 0 to FileListBox.Count - 1 do
+  begin
+    ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+    //ConvertImageWebp(FileListBox.Items[i],ComboExtension.Text);
+  end;
+
+
+{
+  i :=  FileListBox.Count;
+  ShowMessage('Zdjęć: '+ IntToStr(i));
+  ConvertJpgToPngAll(Image1, OPD.FileName);
+ }
+end;
 
 procedure TForm1.ChangeNameImg;
 begin
@@ -365,6 +392,183 @@ begin
 end;
 
 
+procedure TForm1.ConvertImage(FilePath, OutputFormat: string);
+var
+  JpegImage: TJPEGImage;
+  PngImage: TPngImage;
+  BmpImage: TBitmap;
+  IconImage: TIcon;
+  OutputFilePath: string;
+begin
+OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
+
+  // Inicjalizacja zmiennych
+  JpegImage := nil;
+  PngImage := nil;
+  BmpImage := nil;
+  IconImage := nil;
+
+  try
+    // Wybór formatu wejściowego na podstawie rozszerzenia
+    if LowerCase(ExtractFileExt(FilePath)) = '.jpg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.LoadFromFile(FilePath);
+      BmpImage := TBitmap.Create;
+      BmpImage.Assign(JpegImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.jpeg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.LoadFromFile(FilePath);
+      BmpImage := TBitmap.Create;
+      BmpImage.Assign(JpegImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.png' then
+    begin
+      PngImage := TPngImage.Create;
+      PngImage.LoadFromFile(FilePath);
+      BmpImage := TBitmap.Create;
+      BmpImage.Assign(PngImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.bmp' then
+    begin
+      BmpImage := TBitmap.Create;
+      BmpImage.LoadFromFile(FilePath);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.ico' then
+    begin
+      IconImage := TIcon.Create;
+      IconImage.LoadFromFile(FilePath);
+      BmpImage := TBitmap.Create;
+      BmpImage.Assign(IconImage);
+    end
+    else
+      raise Exception.Create('Nieobsługiwany format pliku wejściowego');
+
+    // Wybór formatu wyjściowego
+    if LowerCase(OutputFormat) = 'jpg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.Assign(BmpImage);
+      JpegImage.SaveToFile(OutputFilePath);
+    end
+    else if LowerCase(OutputFormat) = 'jpeg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.Assign(BmpImage);
+      JpegImage.SaveToFile(OutputFilePath);
+    end
+    else if LowerCase(OutputFormat) = 'png' then
+    begin
+      PngImage := TPngImage.Create;
+      PngImage.Assign(BmpImage);
+      PngImage.SaveToFile(OutputFilePath);
+    end
+    else if LowerCase(OutputFormat) = 'bmp' then
+    begin
+      BmpImage.SaveToFile(OutputFilePath);
+    end
+    else if LowerCase(OutputFormat) = 'ico' then
+    begin
+      IconImage := TIcon.Create;
+      IconImage.Assign(BmpImage);
+      IconImage.SaveToFile(OutputFilePath);
+    end
+    else
+      raise Exception.Create('Nieobsługiwany format pliku wyjściowego');
+
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ' + OutputFilePath;
+  finally
+    JpegImage.Free;
+    PngImage.Free;
+    BmpImage.Free;
+    IconImage.Free;
+  end;
+end;
+
+procedure TForm1.ConvertImageWebp(FilePath, OutputFormat: string);
+var
+  JpegImage: TJPEGImage;
+  PngImage: TPngImage;
+  Bitmap: TBitmap;
+  SkImage: ISkImage;
+  OutputFilePath: string;
+begin
+      OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
+
+  // Inicjalizacja zmiennych
+  JpegImage := nil;
+  PngImage := nil;
+  Bitmap := nil;
+
+  try
+    // Wybór formatu wejściowego na podstawie rozszerzenia
+    if LowerCase(ExtractFileExt(FilePath)) = '.jpg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.LoadFromFile(FilePath);
+      Bitmap := TBitmap.Create;
+      Bitmap.Assign(JpegImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.jpeg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.LoadFromFile(FilePath);
+      Bitmap := TBitmap.Create;
+      Bitmap.Assign(JpegImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.png' then
+    begin
+      PngImage := TPngImage.Create;
+      PngImage.LoadFromFile(FilePath);
+      Bitmap := TBitmap.Create;
+      Bitmap.Assign(PngImage);
+    end
+    else if LowerCase(ExtractFileExt(FilePath)) = '.webp' then
+    begin
+      SkImage := TSkImage.MakeFromEncodedFile(FilePath);
+      if not Assigned(SkImage) then
+        raise Exception.Create('Nie można załadować obrazu WebP.');
+
+      Bitmap := TBitmap.Create;
+      Bitmap.SetSize(SkImage.Width, SkImage.Height);
+
+      // Rysowanie obrazu WebP na TBitmap za pomocą TSkCanvas
+     // TSkCanvas(Bitmap.Canvas.Handle).DrawImage(SkImage, 0, 0, SkImage.Width, SkImage.Height);
+    end
+    else
+      raise Exception.Create('Nieobsługiwany format pliku wejściowego');
+
+    // Konwersja obrazu do wybranego formatu wyjściowego
+    if LowerCase(OutputFormat) = 'webp' then
+    begin
+      SkImage := Bitmap.ToSkImage;
+      SkImage.EncodeToFile(OutputFilePath, TSkEncodedImageFormat.WEBP, 100);
+    end
+    else if LowerCase(OutputFormat) = 'jpg' then
+    begin
+      JpegImage := TJPEGImage.Create;
+      JpegImage.Assign(Bitmap);
+      JpegImage.SaveToFile(OutputFilePath);
+    end
+    else if LowerCase(OutputFormat) = 'png' then
+    begin
+      PngImage := TPngImage.Create;
+      PngImage.Assign(Bitmap);
+      PngImage.SaveToFile(OutputFilePath);
+    end
+    else
+      raise Exception.Create('Nieobsługiwany format pliku wyjściowego');
+
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ' + OutputFilePath;
+  finally
+    JpegImage.Free;
+    PngImage.Free;
+    Bitmap.Free;
+  end;
+end;
+
 procedure TForm1.ConvertJpegToPNG(Image: TImage; FilePath: string);
 var
   JpegImage: TJPEGImage;
@@ -419,6 +623,44 @@ begin
     JpegImage.Free;
     PngImage.Free;
     Bitmap.Free;
+  end;
+end;
+
+procedure TForm1.ConvertJpgToPngAll(Image: TImage; FilePath: string);
+var
+  JpegImage: TJPEGImage;
+  PngImage: TPngImage;
+  Bitmap: TBitmap;
+  i: integer;
+  MaxCountImg: integer;
+  CurrentFilePath: string;
+begin
+  MaxCountImg :=  FileListBox.Count - 1;;
+  for i := 0 to MaxCountImg do
+  begin
+    CurrentFilePath := FileListBox.Items[i]; // Pobieranie aktualnej ścieżki pliku
+    ChangeNameImg;
+    JpegImage := TJPEGImage.Create;
+    PngImage := TPngImage.Create;
+    Bitmap := TBitmap.Create;
+    try
+      //FileListBox.Directory := EdtPathImgLoad.Text;
+      // Wczytanie pliku JPG
+      JpegImage.LoadFromFile(CurrentFilePath);
+      // Przekształcenie JPEG do Bitmapy
+      Bitmap.Assign(JpegImage);
+      // Przekształcenie Bitmapy do PNG
+      PngImage.Assign(Bitmap);
+      // Zapisanie obrazu jako PNG
+      NameImage := 'Converted_' + IntToStr(i); // Unikalna nazwa dla każdego obrazu
+      PngImage.SaveToFile(ChangeFileExt(CurrentFilePath,'-' + NameImage + '.png'));
+      //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+      StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
+    finally
+      JpegImage.Free;
+      PngImage.Free;
+      Bitmap.Free;
+    end;
   end;
 end;
 
