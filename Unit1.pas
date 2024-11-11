@@ -45,6 +45,7 @@ type
     SpeedButton1: TSpeedButton;
     SaveimgFolder: TMenuItem;
     EditSaveFolderImg: TEdit;
+    OpenFolder: TMenuItem;
     procedure ToolButton1Click(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -56,6 +57,7 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SaveimgFolderClick(Sender: TObject);
+    procedure OpenFolderClick(Sender: TObject);
 
 
 
@@ -106,6 +108,7 @@ var
   Form1: TForm1;
   NameImage: string;
   PathSaveImg: string;
+  PathImageFolder: String;
 implementation
 
 uses Unit2;
@@ -154,11 +157,11 @@ begin
 
    //Konwertuj WEBP w JPG
    if (ExtensImage = '.webp') and (ComboConvert.Text = 'JPG') then
-    ConvertWebpToJpg2(Image1, PathSaveImg);
+    ConvertWebpToJpg2(Image1, OPD.FileName);
 
   //Konwertuj BMP w JPG
   if (ExtensImage = '.bmp') and (ComboConvert.Text = 'JPG') then
-    ConvertBmpToJPG(Image1,OPD.FileName, PathSaveImg);
+    ConvertBmpToJPG(Image1,OPD.FileName, OPD.FileName);
 
   //Konwertuj ICO w BMP
   if (ExtensImage = '.ico') and (ComboConvert.Text = 'BMP') then
@@ -584,6 +587,7 @@ procedure TForm1.FileListBoxClick(Sender: TObject);
 var
   fileName: string;
 begin
+
   // Pobieranie pełnej ścieżki pliku z FileListBox
   fileName := FileListBox.FileName;
 
@@ -593,6 +597,8 @@ begin
     try
       // Ładowanie obrazu z pliku
       Image1.Picture.LoadFromFile(fileName);
+      //przypisanie ściezki do pliku OPD.FileName
+      OPD.FileName := fileName;
 
       // Pobieranie rozszerzenia pliku
       ExtensImage := ExtractFileExt(fileName);
@@ -617,6 +623,7 @@ begin
   end
   else
     ShowMessage('Plik nie istnieje: ' + fileName);
+
 end;
 
 procedure TForm1.FolderSaveImg;
@@ -653,6 +660,14 @@ end;
 procedure TForm1.Informacja1Click(Sender: TObject);
 begin
   Form2.ShowModal;
+end;
+
+procedure TForm1.OpenFolderClick(Sender: TObject);
+begin
+   if SelectDirectory('Wybierz katalog','',PathImageFolder) then
+    begin
+      FileListBox.Directory := PathImageFolder;
+    end;
 end;
 
 procedure TForm1.OpenImageClick(Sender: TObject);

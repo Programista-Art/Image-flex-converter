@@ -547,6 +547,10 @@ object Form1: TForm1
         Caption = 'Otw'#243'rz zdj'#281'cie'
         OnClick = OpenImageClick
       end
+      object OpenFolder: TMenuItem
+        Caption = 'Otw'#243'rz folder'
+        OnClick = OpenFolderClick
+      end
       object SaveimgFolder: TMenuItem
         Caption = 'Zapisz w folderze'
         OnClick = SaveimgFolderClick
