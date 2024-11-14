@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Image Flex Converter 1.0.0 by Programista Art'
+  Caption = 'Image Flex Converter 1.0.1  by Programista Art'
   ClientHeight = 413
   ClientWidth = 685
   Color = clBtnFace
@@ -198,7 +198,6 @@ object Form1: TForm1
         AutoComplete = False
         Style = csDropDownList
         TabOrder = 0
-        ExplicitTop = 8
       end
       object Button1: TButton
         AlignWithMargins = True
@@ -212,8 +211,6 @@ object Form1: TForm1
         Caption = 'Konwertuj'
         TabOrder = 1
         OnClick = Button1Click
-        ExplicitLeft = 237
-        ExplicitTop = 6
       end
       object Button2: TButton
         AlignWithMargins = True
@@ -227,9 +224,6 @@ object Form1: TForm1
         Caption = 'Konwertuj wszystko'
         TabOrder = 2
         OnClick = Button2Click
-        ExplicitLeft = 552
-        ExplicitTop = 1
-        ExplicitHeight = 33
       end
       object ComboExtension: TComboBox
         AlignWithMargins = True
@@ -242,12 +236,6 @@ object Form1: TForm1
         Align = alRight
         Style = csDropDownList
         TabOrder = 3
-        Items.Strings = (
-          'JPG'
-          'PNG'
-          'WEBP'
-          'ICO'
-          'BMP')
       end
     end
     object FileListBox: TFileListBox

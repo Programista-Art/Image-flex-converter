@@ -93,8 +93,14 @@ type
   procedure ConvertJpgToPngAll(Image: TImage; FilePath: string);
   //Masowa konwertacja oprócz webp
   procedure ConvertImage(FilePath: string; OutputFormat: string);
+  //Masowa konwertacja Webp w Jpg
+  procedure ConvertWebpToJpgAll(FilePath, OutputFormat: string);
+  //Masowa konwertacja Webp w Png
+  procedure ConvertWebpToPngAll(FilePath, OutputFormat: string);
   //Masowa konwertacja JPG w WEBP / WEBP w JPG, PNG w WEBP / WEBP w PNG
   procedure ConvertImageWebp(FilePath: string; OutputFormat: string);
+  //Masowa konwertacja
+  procedure ChooseExtensionAll;
   //Testowa
   procedure ConvertJpgToWebpTets;
   //Zmień rozmiar zdjęcia
@@ -105,6 +111,8 @@ type
   procedure ChooseExtension;
   //Dodawanie rozszerzeń do ComboConvert
   procedure ChooseExtensionAddToComboConvert;
+  //Masowa konwertacja zdjęć
+  procedure ChooseExtensionAddToComboComboExtension;
   procedure ChooseExtSkia;
   procedure OpenURL(const URL: string);
     { Private declarations }
@@ -142,15 +150,17 @@ end;
 
 
 procedure TForm1.Button2Click(Sender: TObject);
-var
-i:Integer;
+//var
+//i:Integer;
 begin
+ChooseExtensionAll;
+{
 for i := 0 to FileListBox.Count - 1 do
   begin
     ConvertImage(FileListBox.Items[i], ComboExtension.Text);
     //ConvertImageWebp(FileListBox.Items[i],ComboExtension.Text);
   end;
-
+ }
 
 {
   i :=  FileListBox.Count;
@@ -208,6 +218,45 @@ begin
 
 end;
 
+procedure TForm1.ChooseExtensionAddToComboComboExtension;
+begin
+   ComboExtension.Clear;
+   // Konwertuj JPG w PNG / WEBP
+   if SameText(ExtensImage, '.jpg') then
+   begin
+     ComboExtension.Items.Add('PNG');
+     ComboExtension.Items.Add('WEBP');
+   end
+   // Konwertuj PNG w JPG / WEBP
+   else if SameText(ExtensImage, '.png') then
+   begin
+     ComboExtension.Items.Add('JPG');
+     ComboExtension.Items.Add('WEBP');
+   end
+   // Konwertuj WEBP w JPG / PNG
+   else if SameText(ExtensImage, '.webp') then
+   begin
+     ComboExtension.Items.Add('JPG');
+     ComboExtension.Items.Add('PNG');
+   end
+   // Konwertuj BMP w JPG
+   else if SameText(ExtensImage, '.bmp') then
+   begin
+     ComboExtension.Items.Add('JPG');
+   end
+   // Konwertuj ICO w BMP
+   else if SameText(ExtensImage, '.ico') then
+   begin
+     ComboExtension.Items.Add('BMP');
+   end
+
+   // Konwertuj JPEG w PNG
+   else if SameText(ExtensImage, '.jpeg') then
+   begin
+     ComboExtension.Items.Add('PNG');
+   end;
+end;
+
 //Dodanie rozszerzeń na podstawie załadowanego pliku
 procedure TForm1.ChooseExtensionAddToComboConvert;
 begin
@@ -248,6 +297,99 @@ begin
    end;
 
 end;
+
+procedure TForm1.ChooseExtensionAll;
+var
+i: integer;
+begin
+  //Konwertuj JPG w PNG
+  if (ExtensImage = '.jpg') and (ComboExtension.Text = 'PNG') then
+  begin
+  for i := 0 to FileListBox.Count - 1 do
+    begin
+      ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+    end;
+  end;
+
+  //Konwertuj PNG w JPG
+  if (ExtensImage = '.png') and (ComboExtension.Text = 'JPG') then
+  begin
+    for i := 0 to FileListBox.Count - 1 do
+      begin
+        ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+    end;
+  end;
+
+  //Konwertuj JPG w WEBP
+   if (ExtensImage = '.jpg') and (ComboExtension.Text = 'WEBP') then
+    begin
+       for i := 0 to FileListBox.Count - 1 do
+       begin
+         ConvertImageWebp(FileListBox.Items[i], ComboExtension.Text);
+         //ConvertWebpToJpg2(Image: TImage; FilePath: string);
+       end;
+    end;
+
+   //Konwertuj WEBP w JPG
+   if (ExtensImage = '.webp') and (ComboExtension.Text = 'JPG') then
+   begin
+     for i := 0 to FileListBox.Count - 1 do
+     begin
+       //ConvertImageWebp(FileListBox.Items[i], ComboExtension.Text);
+       ConvertWebpToJpgAll(FileListBox.Items[i], ComboExtension.Text);
+     end;
+   end;
+
+  //Konwertuj BMP w JPG
+  if (ExtensImage = '.bmp') and (ComboExtension.Text = 'JPG') then
+  begin
+    //ConvertJPGToPNG(Image1,OPD.FileName);
+    for i := 0 to FileListBox.Count - 1 do
+      begin
+        ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+        //ConvertImageWebp(FileListBox.Items[i],ComboExtension.Text);
+      end;
+  end;
+
+  //Konwertuj ICO w BMP
+  if (ExtensImage = '.ico') and (ComboExtension.Text = 'BMP') then
+  begin
+      for i := 0 to FileListBox.Count - 1 do
+        begin
+          ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+          //ConvertImageWebp(FileListBox.Items[i],ComboExtension.Text);
+        end;
+    end;
+
+  //Konwertuj PNG w WEBP
+    if (ExtensImage = '.png') and (ComboExtension.Text = 'WEBP') then
+    begin
+         for i := 0 to FileListBox.Count - 1 do
+         begin
+          ConvertImageWebp(FileListBox.Items[i], ComboExtension.Text);
+         end;
+    end;
+
+  //Konwertuj WEBP w PNG - problem
+  if (ExtensImage = '.webp') and (ComboExtension.Text = 'PNG') then
+  begin
+     for i := 0 to FileListBox.Count - 1 do
+     begin
+       //ConvertImageWebp(FileListBox.Items[i], ComboExtension.Text);
+       ConvertWebpToPngAll(FileListBox.Items[i], ComboExtension.Text);
+     end;
+  end;
+
+  //Konwertuj JPEG w PNG
+  if (ExtensImage = '.jpeg') and (ComboExtension.Text = 'PNG') then
+  begin
+    for i := 0 to FileListBox.Count - 1 do
+      begin
+        ConvertImage(FileListBox.Items[i], ComboExtension.Text);
+      end;
+  end;
+end;
+
 
 procedure TForm1.ChooseExtSkia;
 begin
@@ -487,6 +629,7 @@ OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
   end;
 end;
 
+//Webp
 procedure TForm1.ConvertImageWebp(FilePath, OutputFormat: string);
 var
   JpegImage: TJPEGImage;
@@ -495,14 +638,16 @@ var
   SkImage: ISkImage;
   OutputFilePath: string;
 begin
-      OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
+     OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
 
   // Inicjalizacja zmiennych
   JpegImage := nil;
   PngImage := nil;
   Bitmap := nil;
+  //SkImage := nil;
 
   try
+
     // Wybór formatu wejściowego na podstawie rozszerzenia
     if LowerCase(ExtractFileExt(FilePath)) = '.jpg' then
     begin
@@ -510,6 +655,7 @@ begin
       JpegImage.LoadFromFile(FilePath);
       Bitmap := TBitmap.Create;
       Bitmap.Assign(JpegImage);
+
     end
     else if LowerCase(ExtractFileExt(FilePath)) = '.jpeg' then
     begin
@@ -540,7 +686,7 @@ begin
     else
       raise Exception.Create('Nieobsługiwany format pliku wejściowego');
 
-    // Konwersja obrazu do wybranego formatu wyjściowego
+    // Konwersja obrazu webp w JPG
     if LowerCase(OutputFormat) = 'webp' then
     begin
       SkImage := Bitmap.ToSkImage;
@@ -548,9 +694,12 @@ begin
     end
     else if LowerCase(OutputFormat) = 'jpg' then
     begin
-      JpegImage := TJPEGImage.Create;
-      JpegImage.Assign(Bitmap);
-      JpegImage.SaveToFile(OutputFilePath);
+      SkImage := Bitmap.ToSkImage;
+      SkImage.EncodeToFile(OutputFilePath, TSkEncodedImageFormat.JPEG,100)
+
+      //JpegImage := TJPEGImage.Create;
+     // JpegImage.Assign(Bitmap);
+      //JpegImage.SaveToFile(OutputFilePath);
     end
     else if LowerCase(OutputFormat) = 'png' then
     begin
@@ -800,6 +949,34 @@ begin
   end;
 end;
 
+procedure TForm1.ConvertWebpToJpgAll(FilePath, OutputFormat: string);
+var
+  Bitmap: TBitmap;
+  JpegImage: TJPEGImage;
+  OutputFilePath: string;
+begin
+  OutputFilePath := ChangeFileExt(FilePath, '.' + OutputFormat.ToLower);
+
+  ChangeNameImg;
+  JpegImage := TJPEGImage.Create;
+  Image1.Picture.LoadFromFile(FilePath);
+  Bitmap := TBitmap.Create;
+  try
+    //Bitmap.Assign(Image1.Picture.Graphic); // Error for webp files
+    Bitmap.Width:=Image1.Picture.Width;
+    Bitmap.Height:=Image1.Picture.Height;
+    Bitmap.Canvas.Draw(0,0,Image1.Picture.Graphic);
+    // Zapisanie obrazu jako JPG
+    JpegImage.Assign(Bitmap);
+    JpegImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage + '.jpg'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
+  finally
+    Bitmap.Free;
+    JpegImage.Free;
+  end;
+end;
+
 procedure TForm1.ConvertWebpToPng(Image: TImage; FilePath: string);
 var
   Bitmap: TBitmap;
@@ -825,6 +1002,30 @@ begin
 end;
 
 
+procedure TForm1.ConvertWebpToPngAll(FilePath, OutputFormat: string);
+var
+  Bitmap: TBitmap;
+  PngImage: TPNGImage;
+begin
+  ChangeNameImg;
+  PngImage := TPNGImage.Create;
+  Image1.Picture.LoadFromFile(FilePath); // No error
+  Bitmap := TBitmap.Create;
+  try
+    Bitmap.Width:=Image1.Picture.Width;
+    Bitmap.Height:=Image1.Picture.Height;
+    Bitmap.Canvas.Draw(0,0,Image1.Picture.Graphic);
+    // Zapisanie obrazu jako PNG
+    PngImage.Assign(Bitmap);
+    PngImage.SaveToFile(ChangeFileExt(FilePath,'-' + NameImage +  '.png'));
+    //MessageDlg('Zdjęcie przekonwertowane: ' + #13 + FilePath,TMsgDlgType.mtInformation,[mbOk],0);
+    StatusBar.Panels[1].Text := 'Zdjęcie skonwertowane: ';
+  finally
+    Bitmap.Free;
+    PngImage.Free;
+  end;
+end;
+
 procedure TForm1.FileListBoxClick(Sender: TObject);
 var
   fileName: string;
@@ -844,7 +1045,7 @@ begin
 
       // Pobieranie rozszerzenia pliku
       ExtensImage := ExtractFileExt(fileName);
-
+      ChooseExtensionAddToComboComboExtension;
       // Pobieranie szerokości i wysokości obrazu
       ImageWidth := Image1.Picture.Width;
       ImageHeight := Image1.Picture.Height;
@@ -906,6 +1107,7 @@ end;
 
 procedure TForm1.OpenFolderClick(Sender: TObject);
 begin
+   FileListBox.Clear;
    if SelectDirectory('Wybierz katalog','',PathImageFolder) then
     begin
       FileListBox.Directory := PathImageFolder;

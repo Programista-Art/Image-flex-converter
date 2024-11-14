@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.109,=C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.899,D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Unit1.pas=C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.899,D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Unit1.dfm=C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.292,D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Project1.dproj=C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.292,C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Project1.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.932,=D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.899,C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.899,C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\Programowanie na Delphi\Delphi projekty\2024\Pazdziernik 2024\Convert-bmp-w-jpg\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.109,=C:\Users\Programista Art\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>
