@@ -11,9 +11,9 @@
 9. JPEG w  PNG
 
 UI
-![alt](img/1.png)
+![alt](img/Image%20Flex%20Converter.jpg)
 #
-![alt](img/2.png)
+![alt](img/Image%20Flex%20Converter1.jpg)
 #
-![alt](img/3.png)
+![alt](img/Image%20Flex%20Converter2.jpg)
 
