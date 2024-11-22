@@ -11,9 +11,9 @@
 9. JPEG w  PNG
 
 UI
-![alt](img/1.jpg)
+![alt](img/img1.jpg)
 #
-![alt](img/2.jpg)
+![alt](img/img2.jpg)
 #
-![alt](img/3.jpg)
+![alt](img/img3.jpg)
 
